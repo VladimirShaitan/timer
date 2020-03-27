@@ -66,5 +66,5 @@ Check HTML example above.
 
 <b>
 P.S</b> <i>If you have any questions just contact me by my email <a href="mailto:shaitan.vladimir@gmail.com">shaitan.vladimir@gmail.com</a> 
-you also can contact me via my web-site <a href="https://vs-dev.info/" target="_blank">vs-dev.info</a>  
+you also can contact me via my web-site: <br> <a href="https://vs-dev.info/" target="_blank">vs-dev.info</a>  
 </i>
