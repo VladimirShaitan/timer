@@ -64,4 +64,7 @@ Check HTML example above.
  ````
 <b>countdown-out</b> - class name that will be added to counter wrapper after Timer will stop.
 
-<b>P.S</b> <i>If you have any questions just contact me by my email shaitam.vladimir@gmail.com </i>
+<b>
+P.S</b> <i>If you have any questions just contact me by my email <a href="mailto:shaitan.vladimir@gmail.com">shaitan.vladimir@gmail.com</a> 
+you also can contact me via my web-site <a href="https://vs-dev.info/" target="_blank">vs-dev.info</a>  
+</i>
