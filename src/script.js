@@ -27,7 +27,7 @@ class Timer {
         }
     }
 
-    getTimeRemaining = (endtime) =>  {
+    getTimeRemaining(endtime)  {
         let t = Date.parse(endtime) - Date.parse(new Date());
         let seconds = Math.floor((t / 1000) % 60);
         let minutes = Math.floor((t / 1000 / 60) % 60);
@@ -42,7 +42,7 @@ class Timer {
         };
     };
 
-    initializeClock = (className, endtime) => {
+    initializeClock(className, endtime) {
 
             let clocks = document.querySelectorAll('.'+className);
             for(let i = 0; i <= clocks.length-1; i++) {
@@ -80,3 +80,4 @@ class Timer {
 }
 
 let a = new Timer(48, 'countdown');
+console.log(a);

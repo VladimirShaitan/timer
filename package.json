@@ -1,0 +1,24 @@
+{
+  "name": "timer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/script.js",
+  "scripts": {
+    "build": "babel src -d dist --presets es2015"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladimirShaitan/timer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VladimirShaitan/timer/issues"
+  },
+  "homepage": "https://github.com/VladimirShaitan/timer#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1"
+  }
+}
