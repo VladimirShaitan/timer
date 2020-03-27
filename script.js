@@ -1,19 +1,33 @@
-let timerFinished = false;
-(function () {
+class Timer {
+    constructor(hours = 10, counterClassName) {
+        this.timeinterval = null;
+        this.timerFinished = false;
+        this.couterWrpClass = counterClassName;
+        this.endDate = Date.parse(new Date()) + Number(hours) * 60 * 60 * 1000;
+        if(!localStorage.getItem('endTimer')) {
+            // 5 sec
+            // localStorage.setItem('endTimer', Date.parse(new Date()) + 5 * 1000);
+            localStorage.setItem('endTimer', this.endDate);
 
-    let endDate = Date.parse(new Date()) + 10 * 24 * 60 * 60 * 1000;
-    if(!localStorage.getItem('endTimer')) {
-        // localStorage.setItem('endTimer', Date.parse(new Date()) + 10 * 24 * 60 * 60 * 1000);
 
-        // 5 sec from now (refresh twice to see this)
-        localStorage.setItem('endTimer', Date.parse(new Date()) + 5 * 1000);
-    } else {
-        endDate = Number(localStorage.getItem('endTimer'));
+        } else {
+            this.endDate = Number(localStorage.getItem('endTimer'));
+        }
+
+        this.deadline = new Date(this.endDate); // for endless timer
+
+        if(new Date(Number(localStorage.getItem('endTimer'))) > new Date()) {
+            this.initializeClock(this.couterWrpClass, this.deadline);
+        } else {
+            this.timerFinished = true;
+            let clocks = document.querySelectorAll('.'+this.couterWrpClass);
+            for(let i = 0; i <= clocks.length-1; i++) {
+                clocks[i].classList.add('counter-out');
+            }
+        }
     }
 
-    // console.log(endDate, typeof endDate);
-
-    function getTimeRemaining(endtime) {
+    getTimeRemaining = (endtime) =>  {
         let t = Date.parse(endtime) - Date.parse(new Date());
         let seconds = Math.floor((t / 1000) % 60);
         let minutes = Math.floor((t / 1000 / 60) % 60);
@@ -26,44 +40,43 @@ let timerFinished = false;
             'minutes': minutes,
             'seconds': seconds
         };
-    }
+    };
 
-    function initializeClock(id, endtime) {
-        let clock = document.getElementById(id);
-        let daysSpan = clock.querySelector('.days');
-        let hoursSpan = clock.querySelector('.hours');
-        let minutesSpan = clock.querySelector('.minutes');
-        let secondsSpan = clock.querySelector('.seconds');
+    initializeClock = (className, endtime) => {
 
-        function updateClock() {
-            let t = getTimeRemaining(endtime);
+            let clocks = document.querySelectorAll('.'+className);
+            for(let i = 0; i <= clocks.length-1; i++) {
+                clocks[i].days = clocks[i].querySelector('.days');
+                clocks[i].hours = clocks[i].querySelector('.hours');
+                clocks[i].minutes = clocks[i].querySelector('.minutes');
+                clocks[i].seconds = clocks[i].querySelector('.seconds');
+            }
 
-            daysSpan.innerHTML = t.days;
-            hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
-            minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
-            secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+        const updateClock = () => {
+
+
+            let t = this.getTimeRemaining(endtime);
+
+            for(let i = 0; i <= clocks.length-1; i++) {
+                clocks[i].days.innerHTML = ('0' + t.days).slice(-2);
+                clocks[i].hours.innerHTML = ('0' + t.hours).slice(-2);
+                clocks[i].minutes.innerHTML = ('0' + t.minutes).slice(-2);
+                clocks[i].seconds.innerHTML = ('0' + t.seconds).slice(-2);
+            }
+
 
             if (t.total <= 0) {
-                clearInterval(timeinterval);
-                timerFinished = true;
-                // console.log(timerFinished)
+                clearInterval(this.timeinterval);
+                this.timerFinished = true;
+                for(let i = 0; i <= clocks.length-1; i++) {
+                    clocks[i].classList.add('counter-out');
+                }
             }
-        }
+        };
 
         updateClock();
-        let timeinterval = setInterval(updateClock, 1000);
+        this.timeinterval = setInterval(updateClock, 1000);
     }
+}
 
-    let deadline = new Date(endDate); // for endless timer
-
-    if(new Date(Number(localStorage.getItem('endTimer'))) > new Date()) {
-        // console.log(timerFinished)
-        initializeClock('countdown', deadline);
-    } else {
-        timerFinished = true;
-        // console.log(timerFinished)
-    }
-}());
-
-console.log(timerFinished);
-// Use timerFinished variable to know if timer is finished counting
+let a = new Timer(48, 'countdown');
