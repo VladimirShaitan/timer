@@ -6,32 +6,42 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Timer = function () {
     function Timer() {
-        var hours = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
-        var counterClassName = arguments[1];
+        var staticDate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+        var dateOrHours = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 10;
+        var counterClassName = arguments[2];
+        var counterOffClass = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'counter-out';
 
         _classCallCheck(this, Timer);
 
-        this.timeinterval = null;
+        this.timeInterval = null;
         this.timerFinished = false;
         this.couterWrpClass = counterClassName;
-        this.endDate = Date.parse(new Date()) + Number(hours) * 60 * 60 * 1000;
-        if (!localStorage.getItem('endTimer')) {
-            // 5 sec
-            // localStorage.setItem('endTimer', Date.parse(new Date()) + 5 * 1000);
-            localStorage.setItem('endTimer', this.endDate);
+        this.counterOffClass = counterOffClass;
+        this.staticDate = staticDate;
+        this.storageItemName = counterClassName + 'EndTimer';
+
+        if (!this.staticDate) {
+            this.endDate = Date.parse(new Date()) + Number(dateOrHours) * 60 * 60 * 1000;
+            if (!localStorage.getItem(this.storageItemName)) {
+                // 5 sec
+                // localStorage.setItem(this.storageItemName, Date.parse(new Date()) + 5 * 1000);
+                localStorage.setItem(this.storageItemName, this.endDate);
+            } else {
+                this.endDate = Number(localStorage.getItem(this.storageItemName));
+            }
         } else {
-            this.endDate = Number(localStorage.getItem('endTimer'));
+            this.endDate = Date.parse(dateOrHours);
         }
 
-        this.deadline = new Date(this.endDate); // for endless timer
+        this.deadline = new Date(this.endDate);
 
-        if (new Date(Number(localStorage.getItem('endTimer'))) > new Date()) {
+        if (new Date(this.endDate) > new Date()) {
             this.initializeClock(this.couterWrpClass, this.deadline);
         } else {
             this.timerFinished = true;
             var clocks = document.querySelectorAll('.' + this.couterWrpClass);
             for (var i = 0; i <= clocks.length - 1; i++) {
-                clocks[i].classList.add('counter-out');
+                clocks[i].classList.add(this.counterOffClass);
             }
         }
     }
@@ -77,21 +87,26 @@ var Timer = function () {
                 }
 
                 if (t.total <= 0) {
-                    clearInterval(_this.timeinterval);
+                    clearInterval(_this.timeInterval);
                     _this.timerFinished = true;
                     for (var _i2 = 0; _i2 <= clocks.length - 1; _i2++) {
-                        clocks[_i2].classList.add('counter-out');
+                        clocks[_i2].classList.add(_this.counterOffClass);
                     }
                 }
             };
 
             updateClock();
-            this.timeinterval = setInterval(updateClock, 1000);
+            this.timeInterval = setInterval(updateClock, 1000);
         }
     }]);
 
     return Timer;
 }();
 
-var a = new Timer(48, 'countdown');
-console.log(a);
+var a = new Timer(false, 48, 'countdown', 'counter-out');
+
+var b = new Timer(false, 162, 'second-counter', 'counter-out');
+
+var c = new Timer(true, 'Mar 28 2020', 'countdown2', 'counter-out');
+
+// console.log(a);
