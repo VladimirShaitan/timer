@@ -6,7 +6,9 @@ body {
     display: flex;
     justify-content: space-around;
 }
-
+.col {
+    width: calc(100% / 3);
+}
 .countdown-title {
     color: #396;
     font-weight: 100;

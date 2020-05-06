@@ -1,11 +1,19 @@
 class Timer {
-    constructor(staticDate = false, dateOrHours = 10, counterClassName, counterOffClass = 'counter-out') {
+    constructor(
+        staticDate = false,
+        dateOrHours = 10,
+        counterClassName,
+        counterOffClass = 'counter-out',
+    ) {
         this.timeInterval = null;
         this.timerFinished = false;
         this.couterWrpClass = counterClassName;
+        this.couterWrpDOMEl = document.querySelectorAll('.'+counterClassName);
         this.counterOffClass = counterOffClass;
         this.staticDate = staticDate;
         this.storageItemName = counterClassName + 'EndTimer';
+        this.createEvents();
+
 
         if(!this.staticDate) {
             this.endDate = Date.parse(new Date()) + Number(dateOrHours) * 60 * 60 * 1000;
@@ -24,6 +32,7 @@ class Timer {
         this.deadline = new Date(this.endDate);
 
         if(new Date(this.endDate) > new Date()) {
+            this.events().beforeInit();
             this.initializeClock(this.couterWrpClass, this.deadline);
         } else {
             this.timerFinished = true;
@@ -84,13 +93,57 @@ class Timer {
         updateClock();
         this.timeInterval = setInterval(updateClock, 1000);
     }
+
+    stopTimer() {
+        clearInterval(this.timeInterval);
+        let clocks = document.querySelectorAll('.'+this.couterWrpClass);
+        this.timerFinished = true;
+        for(let i = 0; i <= clocks.length-1; i++) {
+            clocks[i].classList.add(this.counterOffClass);
+        }
+    }
+
+
+    createEvents() {
+        this.beforeInit = new Event('counterBeforeInit');
+        this.beforeInit.timer = this;
+    }
+
+    events() {
+        return {
+            beforeInit:() => {
+                    this.couterWrpDOMEl[0].dispatchEvent(this.beforeInit);
+            }
+        }
+    }
+
 }
+
 
 let a = new Timer( false, 48, 'countdown', 'counter-out');
 
 let b = new Timer( false, 162, 'second-counter', 'counter-out');
 
-let c = new Timer(true, 'Mar 28 2020', 'countdown2', 'counter-out');
+let c = new Timer(true, 'May 28 2020', 'countdown2', 'counter-out');
+
+let d = new Timer(false, 162, 'second-counter', 'counter-out');
+
+
+// Custom event
+let e = (function () {
+    const coundownClass = 'countdown3';
+    document.addEventListener('counterBeforeInit', function (e) {
+        console.log("Hi i'm before init event, nice to meet you");
+        if(e.target.classList.contains(coundownClass)) {
+            setTimeout(() => {e.timer.stopTimer()}, 5000);
+
+        }
+    }, true);
+    return new Timer( false, 48, 'countdown3', 'counter-out');
+})();
+
+
+
 
 
 // console.log(a);

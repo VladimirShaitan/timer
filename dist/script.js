@@ -16,9 +16,11 @@ var Timer = function () {
         this.timeInterval = null;
         this.timerFinished = false;
         this.couterWrpClass = counterClassName;
+        this.couterWrpDOMEl = document.querySelectorAll('.' + counterClassName);
         this.counterOffClass = counterOffClass;
         this.staticDate = staticDate;
         this.storageItemName = counterClassName + 'EndTimer';
+        this.createEvents();
 
         if (!this.staticDate) {
             this.endDate = Date.parse(new Date()) + Number(dateOrHours) * 60 * 60 * 1000;
@@ -36,6 +38,7 @@ var Timer = function () {
         this.deadline = new Date(this.endDate);
 
         if (new Date(this.endDate) > new Date()) {
+            this.events().beforeInit();
             this.initializeClock(this.couterWrpClass, this.deadline);
         } else {
             this.timerFinished = true;
@@ -98,6 +101,33 @@ var Timer = function () {
             updateClock();
             this.timeInterval = setInterval(updateClock, 1000);
         }
+    }, {
+        key: 'stopTimer',
+        value: function stopTimer() {
+            clearInterval(this.timeInterval);
+            var clocks = document.querySelectorAll('.' + this.couterWrpClass);
+            this.timerFinished = true;
+            for (var i = 0; i <= clocks.length - 1; i++) {
+                clocks[i].classList.add(this.counterOffClass);
+            }
+        }
+    }, {
+        key: 'createEvents',
+        value: function createEvents() {
+            this.beforeInit = new Event('counterBeforeInit');
+            this.beforeInit.timer = this;
+        }
+    }, {
+        key: 'events',
+        value: function events() {
+            var _this2 = this;
+
+            return {
+                beforeInit: function beforeInit() {
+                    _this2.couterWrpDOMEl[0].dispatchEvent(_this2.beforeInit);
+                }
+            };
+        }
     }]);
 
     return Timer;
@@ -107,6 +137,22 @@ var a = new Timer(false, 48, 'countdown', 'counter-out');
 
 var b = new Timer(false, 162, 'second-counter', 'counter-out');
 
-var c = new Timer(true, 'Mar 28 2020', 'countdown2', 'counter-out');
+var c = new Timer(true, 'May 28 2020', 'countdown2', 'counter-out');
+
+var d = new Timer(false, 162, 'second-counter', 'counter-out');
+
+// Custom event
+var e = function () {
+    var coundownClass = 'countdown3';
+    document.addEventListener('counterBeforeInit', function (e) {
+        console.log("Hi i'm before init event, nice to meet you");
+        if (e.target.classList.contains(coundownClass)) {
+            setTimeout(function () {
+                e.timer.stopTimer();
+            }, 5000);
+        }
+    }, true);
+    return new Timer(false, 48, 'countdown3', 'counter-out');
+}();
 
 // console.log(a);

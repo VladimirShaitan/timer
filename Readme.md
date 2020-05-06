@@ -64,6 +64,14 @@ Check HTML example above.
  ````
 <b>countdown-out</b> - class name that will be added to counter wrapper after Timer will stop.
 
+You can use <b>counterBeforeInit</b> event and you can access to current timer instance vie event variable
+
+ ````javascript
+     document.addEventListener('counterBeforeInit', function (e) {
+         console.log(e.timer);
+     }, true);
+ ````
+
 <b>
 P.S</b> <i>If you have any questions just contact me by my email <a href="mailto:shaitan.vladimir@gmail.com">shaitan.vladimir@gmail.com</a> 
 you also can contact me via my web-site: <br> <a href="https://vs-dev.info/" target="_blank">vs-dev.info</a>  
